@@ -118,11 +118,13 @@ class Evaluator:
 	def evaluate(self,ast):
 		if ast.expr():
 			# start benchmark
-			repeat = 100
+			repeat = 3
+			number = 50
 			expr = ast.expr()
-			times = timeit.repeat(stmt=lambda:self.evaluateExpr(expr,from_top=True),repeat=repeat,number=1)
-			print(f"\nUsing Python (vanilla), this took an average of {sum(times)/repeat:.3f} seconds.")
-			print(f"All {repeat} runtimes in seconds: {times}\n")
+			times = timeit.repeat(stmt=lambda:self.evaluateExpr(expr,from_top=True),repeat=repeat,number=number)
+			print(f"\tUsing Python (vanilla), this took an average of {sum(times)/(repeat*number):.3f} seconds.")
+			print(f"\tAll {repeat} runtimes of {number} executions: {times}")
+			return JustVal(None)
 			# end benchmark
 			return self.evaluateExpr(ast.expr(),from_top=True)
 		if ast.assign():
@@ -494,9 +496,9 @@ class Evaluator:
 			raise RASPTypeError("Applying unfinished expects to apply",encoder_name,"or selector, got:",strdesc(sel))
 		if not isinstance(input_val,Iterable):
 			raise RASPTypeError("Applying unfinished expects iterable input, got:",strdesc(input_val))
-		# start benchmark?
+		# alternative position to start benchmark
 		res = unf(input_val)
-		# end benchmark?
+		# alternative position to end benchmark
 		res.created_from_input = input_val
 		return res
 
